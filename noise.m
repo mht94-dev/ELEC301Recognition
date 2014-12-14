@@ -2,7 +2,7 @@
 
 Template = imread('Template.jpg');
 
-Image = imread('Image.jpg');
+Image = imread('TestImage2.png');
 
 bwTemplate = im2bw(Template);
 bwImage = im2bw(Image,0.1);
@@ -12,12 +12,12 @@ bwImage = im2bw(Image,0.1);
 
 %% Noise Detection
 % type = 'gaussian';
-% NT = imnoise(Template,type);
+% % NT = imnoise(Template,type);
 % NI = imnoise(Image, type);
-% 
-% subplot(2,1,1)
-% imshow(NT)
-% subplot(2,1,2)
+% % 
+% % subplot(2,1,1)
+% % imshow(NT)
+% % subplot(2,1,2)
 % imshow(NI)
 % title(type)
 % figure
@@ -46,15 +46,15 @@ bwImage = im2bw(Image,0.1);
 % title(type)
 % figure
 % 
-% type = 'salt & pepper';
+type = 'gaussian';
 % NT = imnoise(Template,type);
-% NI = imnoise(Image, type);
+NI = imnoise(Image, type,0.8);
 % 
 % 
 % subplot(2,1,1)
 % imshow(NT)
 % subplot(2,1,2)
-% imshow(NI)
+imshow(NI)
 % title(type)
 % figure
 % 
@@ -78,85 +78,85 @@ bwImage = im2bw(Image,0.1);
 % figure
 % imshow(gImage)
 
-%% Hough Transform
-
+% Hough Transform
+% 
 % [HTemplate, t, r] = hough(gTemplate);
 % [HImage,t,r] = hough(gImage);
 % figure
 % imshow(HTemplate, [], 'XData', t, 'YData', r )
-% %figure
-% %imshow(HImage, [], 'XData', t, 'YData', r )
+% figure
+% imshow(HImage, [], 'XData', t, 'YData', r )
 % 
-% % detect Hough peaks
+% detect Hough peaks
 % numpeaks = 4; %Number of peaks to look for
 % P = houghpeaks(HImage, numpeaks)  
 % 
-% %draw peaks over Hough transform
-% %don't replace the picture when we start to draw
+% draw peaks over Hough transform
+% don't replace the picture when we start to draw
 % hold on; 
-% %plot( t( P(:,2) ), r( P(:,1) ), 's', 'color', 'green'); 
-
-%% Random
-
-RGB = imread('Image.jpg');
-
-RGBTemp = imread('Template.jpg');
-
+% plot( t( P(:,2) ), r( P(:,1) ), 's', 'color', 'green'); 
+% 
+% Random
+% 
+% RGB = imread('Image.jpg');
+% 
+% RGBTemp = imread('Template.jpg');
+% 
 % Convert to intensity.
-I  = rgb2gray(RGB);
-ITemp = rgb2gray(RGBTemp);
-
-%Extract edges.
-BW = edge(I,'canny');
-[H,T,R] = hough(BW,'RhoResolution',0.5,'Theta',-90:0.5:89.5);
-
-BWTemp = edge(ITemp,'canny');
-[HTemp,TTemp,RTemp] = hough(BWTemp,'RhoResolution',0.5,'Theta',-90:0.5:89.5);
-
+% I  = rgb2gray(RGB);
+% ITemp = rgb2gray(RGBTemp);
+% 
+% Extract edges.
+% BW = edge(I,'canny');
+% [H,T,R] = hough(BW,'RhoResolution',0.5,'Theta',-90:0.5:89.5);
+% 
+% BWTemp = edge(ITemp,'canny');
+% [HTemp,TTemp,RTemp] = hough(BWTemp,'RhoResolution',0.5,'Theta',-90:0.5:89.5);
+% 
 % Display the original image.
-figure
-imshow(BW);
-title(' Image');
-
+% figure
+% imshow(BW);
+% title(' Image');
+% 
 % Display the template image.
-figure
-imshow(BWTemp);
-title('Image Template');
-
+% figure
+% imshow(BWTemp);
+% title('Image Template');
+% 
 % Display the Hough matrix of Image.
-figure
-imshow(imadjust(mat2gray(H)),'XData',T,'YData',R,...
-      'InitialMagnification','fit');
-title('Hough Transform of Image');
-xlabel('\theta'), ylabel('\rho');
-axis on, axis normal, hold on;
-colormap(hot);
+% figure
+% imshow(imadjust(mat2gray(H)),'XData',T,'YData',R,...
+%       'InitialMagnification','fit');
+% title('Hough Transform of Image');
+% xlabel('\theta'), ylabel('\rho');
+% axis on, axis normal, hold on;
+% colormap(hot);
 % detect Hough peaks
-numpeaks = 10; %Number of peaks to look for
-P = houghpeaks(H, numpeaks)  
-
-%draw peaks over Hough transform
-%don't replace the picture when we start to draw
-hold on; 
-plot( T( P(:,2) ), R( P(:,1) ), 's', 'color', 'green'); 
-hold off
+% numpeaks = 10; %Number of peaks to look for
+% P = houghpeaks(H, numpeaks)  
+% 
+% draw peaks over Hough transform
+% don't replace the picture when we start to draw
+% hold on; 
+% plot( T( P(:,2) ), R( P(:,1) ), 's', 'color', 'green'); 
+% hold off
 % Display the Hough matrix of template.
-figure
-imshow(imadjust(mat2gray(HTemp)),'XData',TTemp,'YData',RTemp,...
-      'InitialMagnification','fit');
-title('Hough Transform of Template');
-xlabel('\theta'), ylabel('\rho');
-axis on, axis normal, hold on;
-colormap(hot);
+% figure
+% imshow(imadjust(mat2gray(HTemp)),'XData',TTemp,'YData',RTemp,...
+%       'InitialMagnification','fit');
+% title('Hough Transform of Template');
+% xlabel('\theta'), ylabel('\rho');
+% axis on, axis normal, hold on;
+% colormap(hot);
 % detect Hough peaks in Template
-PTemp = houghpeaks(HTemp, numpeaks)  
-
-%draw peaks over Hough transform
-%don't replace the picture when we start to draw
-hold on; 
-plot( TTemp( PTemp(:,2) ), RTemp( PTemp(:,1) ), 's', 'color', 'green'); 
-hold off
-
+% PTemp = houghpeaks(HTemp, numpeaks)  
+% 
+% draw peaks over Hough transform
+% don't replace the picture when we start to draw
+% hold on; 
+% plot( TTemp( PTemp(:,2) ), RTemp( PTemp(:,1) ), 's', 'color', 'green'); 
+% hold off
+% 
 % [maxval,maxind] = max(HTemp);
 % medval = median(HTemp);
 % 
