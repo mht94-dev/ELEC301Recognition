@@ -46,9 +46,9 @@ bwImage = im2bw(Image,0.1);
 % title(type)
 % figure
 % 
-type = 'gaussian';
+type = 'speckle';
 % NT = imnoise(Template,type);
-NI = imnoise(Image, type,0.8);
+NI = imnoise(Image, type,20);
 % 
 % 
 % subplot(2,1,1)
