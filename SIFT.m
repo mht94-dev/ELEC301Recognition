@@ -17,20 +17,20 @@ Original = Image;
 %1st Octave
 Octave1 = [];
 ki=0;
-Image(x:x+6,y:y+6)=0; %zero-pad
+Image(x:x+4,y:y+4)=0; %zero-pad
 for kj=0:3
     kk=sqrt(2);
     sigma=(kk^(kj+(2*ki)))*1.6;
     %generating the gaussians
-    for m=-3:3
-        for n=-3:3
-            gaussian1(m+4,n+4)= (1/((2*pi)*((kk*sigma)*(kk*sigma))))*exp(-((m*m)+(n*n))/(2*(kk*kk)*(sigma*sigma)));
+    for m=-2:2
+        for n=-2:2
+            gaussian1(m+3,n+3)= (1/((2*pi)*((kk*sigma)*(kk*sigma))))*exp(-((m*m)+(n*n))/(2*(kk*kk)*(sigma*sigma)));
         end
     end
     %convolve image with the gaussian filters generated above
     for i=1:x
         for j=1:y
-            singlesum=Image(i:i+6,j:j+6)'.*gaussian1;
+            singlesum=Image(i:i+4,j:j+4)'.*gaussian1;
             conv1(i,j)=sum(sum(singlesum));
         end
     end
@@ -41,20 +41,20 @@ end
 Octave2 = [];
 Image=imresize(Original,1/((ki+1)*2));
 ki=1;
-Image(x:x+6,y:y+6)=0; %zero-pad
+Image(x:x+4,y:y+4)=0; %zero-pad
 for kj=0:3
     kk=sqrt(2);
     sigma=(kk^(kj+(2*ki)))*1.6;
     %generating the gaussians
-    for m=-3:3
-        for n=-3:3
-            gaussian2(m+4,n+4)= (1/((2*pi)*((kk*sigma)*(kk*sigma))))*exp(-((m*m)+(n*n))/(2*(kk*kk)*(sigma*sigma)));
+    for m=-2:2
+        for n=-2:2
+            gaussian2(m+3,n+3)= (1/((2*pi)*((kk*sigma)*(kk*sigma))))*exp(-((m*m)+(n*n))/(2*(kk*kk)*(sigma*sigma)));
         end
     end
     %convolve image with the gaussian filters generated above
     for i=1:x
         for j=1:y
-            singlesum=Image(i:i+6,j:j+6)'.*gaussian2;
+            singlesum=Image(i:i+4,j:j+4)'.*gaussian2;
             conv2(i,j)=sum(sum(singlesum));
         end
     end
@@ -65,20 +65,20 @@ end
 Octave3 = [];
 Image=imresize(Original,1/((ki+1)*2));
 ki=2;
-Image(x:x+6,y:y+6)=0; %zero-pad
+Image(x:x+4,y:y+4)=0; %zero-pad
 for kj=0:3
     kk=sqrt(2);
     sigma=(kk^(kj+(2*ki)))*1.6;
     %generating the gaussians
-    for m=-3:3
-        for n=-3:3
-            gaussian3(m+4,n+4)= (1/((2*pi)*((kk*sigma)*(kk*sigma))))*exp(-((m*m)+(n*n))/(2*(kk*kk)*(sigma*sigma)));
+    for m=-2:2
+        for n=-2:2
+            gaussian3(m+3,n+3)= (1/((2*pi)*((kk*sigma)*(kk*sigma))))*exp(-((m*m)+(n*n))/(2*(kk*kk)*(sigma*sigma)));
         end
     end
     %convolve image with the gaussian filters generated above
     for i=1:x
         for j=1:y
-            singlesum=Image(i:i+6,j:j+6)'.*gaussian3;
+            singlesum=Image(i:i+4,j:j+4)'.*gaussian3;
             conv3(i,j)=sum(sum(singlesum));
         end
     end
@@ -108,37 +108,46 @@ z1=0;
 f=0;
 
 for i=2:511
-    for j=2:511
-
-
+    for j=2:511     
+        %for maximum
+        %compare the pixel with it's neighbors in the same image  
+        if (((diff_12(i,j)>diff_12(i-1,j))&&(diff_12(i,j)>diff_12(i+1,j))....
+            &&(diff_12(i,j)>diff_12(i,j-1))&&(diff_12(i,j)>diff_12(i+1,j+1))....
+            &&(diff_12(i,j)>diff_12(i-1,j-1))&&(diff_12(i,j)>diff_12(i-1,j+1))....
+            &&(diff_12(i,j)>diff_12(i+1,j-1))&&(diff_12(i,j)>diff_12(i,j+1))))
+                x1=x1+1;
+        else
+            continue;
+        end
+        if x1>0
+            %compare the pixel with its neighbors in the image processed by gaussian of
+            %1 scale more
+            if((diff_12(i,j)>diff_13(i,j))&&(diff_12(i,j)>diff_13(i-1,j))....
+                &&(diff_12(i,j)>diff_13(i+1,j))&&(diff_12(i,j)>diff_13(i,j-1))....
+                &&(diff_12(i,j)>diff_13(i+1,j+1))&&(diff_12(i,j)>diff_13(i-1,j-1))....
+                &&(diff_12(i,j)>diff_13(i-1,j+1))&&(diff_12(i,j)>diff_13(i+1,j-1))&&(diff_12(i,j)>diff_13(i,j+1)))
+                y1=y1+1;
+            else
+                continue;
         
-if (((diff_12(i,j)>diff_12(i-1,j))&&(diff_12(i,j)>diff_12(i+1,j))....
-        &&(diff_12(i,j)>diff_12(i,j-1))&&(diff_12(i,j)>diff_12(i+1,j+1))....
-        &&(diff_12(i,j)>diff_12(i-1,j-1))&&(diff_12(i,j)>diff_12(i-1,j+1))....
-        &&(diff_12(i,j)>diff_12(i+1,j-1))&&(diff_12(i,j)>diff_12(i,j+1))))
-    x1=x1+1;
-else
-    continue;
-end
-
-if x1>0
-    if((diff_12(i,j)>diff_13(i,j))&&(diff_12(i,j)>diff_13(i-1,j))....
-            &&(diff_12(i,j)>diff_13(i+1,j))&&(diff_12(i,j)>diff_13(i,j-1))....
-            &&(diff_12(i,j)>diff_13(i+1,j+1))&&(diff_12(i,j)>diff_13(i-1,j-1))....
-            &&(diff_12(i,j)>diff_13(i-1,j+1))&&(diff_12(i,j)>diff_13(i+1,j-1))&&(diff_12(i,j)>diff_13(i,j+1)))
-        y1=y1+1;
-    else
-        continue;
-        
-    end 
-end
-
-  % store key point location if it is maximum in its neighbourhood on same scale and also on scale above and below
-  key(i,j)=diff_12(i,j);                    
-  f=1;
-  
-
-end
+            end 
+        end
+        %compare the pixel with its neighbors in the image processed by gaussian of
+        %1 scale less
+        if y1>0
+            if ((diff_12(i,j)>diff_11(i,j))&&(diff_12(i,j)>diff_11(i-1,j))....
+                &&(diff_12(i,j)>diff_11(i+1,j))&&(diff_12(i,j)>diff_11(i,j-1))....
+                &&(diff_12(i,j)>diff_11(i+1,j+1))&&(diff_12(i,j)>diff_11(i-1,j-1))....
+                &&(diff_12(i,j)>diff_11(i-1,j+1))&&(diff_12(i,j)>diff_11(i+1,j-1))&&(diff_12(i,j)>diff_11(i,j+1)))
+                    z1=z1+1;
+            else 
+                continue;
+            end
+        end
+        % store key point location if it is maximum in its neighbourhood on same scale and also on scale above and below
+        key(i,j)=diff_12(i,j);                    
+        f=1;
+    end
 end
     
   
@@ -150,7 +159,7 @@ z=0;
 
 for i=2:511
     for j=2:511
-        
+%compare the pixel with it's neighbors in the same image  
 if (((diff_12(i,j)<diff_12(i-1,j))&&(diff_12(i,j)<diff_12(i+1,j))....
         &&(diff_12(i,j)<diff_12(i,j-1))&&(diff_12(i,j)<diff_12(i+1,j+1))....
         &&(diff_12(i,j)<diff_12(i-1,j-1))&&(diff_12(i,j)<diff_12(i-1,j+1))....
@@ -159,7 +168,8 @@ if (((diff_12(i,j)<diff_12(i-1,j))&&(diff_12(i,j)<diff_12(i+1,j))....
 else
    continue;
 end
-
+%compare the pixel with its neighbors in the image processed by gaussian of
+%1 scale more
 if x>0
     if ((diff_12(i,j)<diff_13(i,j))&&(diff_12(i,j)<diff_13(i-1,j))....
             &&(diff_12(i,j)<diff_13(i+1,j))&&(diff_12(i,j)<diff_13(i,j-1))....
@@ -171,19 +181,20 @@ if x>0
         
     end 
 end
-  if y>0
-      
-   if ((diff_12(i,j)<diff_11(i,j))&&(diff_12(i,j)<diff_11(i-1,j))....
-           &&(diff_12(i,j)<diff_11(i+1,j))&&(diff_12(i,j)<diff_11(i,j-1))....
-           &&(diff_12(i,j)<diff_11(i+1,j+1))&&(diff_12(i,j)<diff_11(i-1,j-1))....
-           &&(diff_12(i,j)<diff_11(i-1,j+1))&&(diff_12(i,j)<diff_11(i+1,j-1))&&(diff_12(i,j)<diff_11(i,j+1)))
-       z=z+1;
-   else 
-       continue;
-   end
-  end
-  % store key point location if it is minimum in its neighbourhood on same scale and also on scale above and below
-  key(i,j)=diff_12(i,j);               
+%compare the pixel with its neighbors in the image processed by gaussian of
+%1 scale less
+if y>0
+    if ((diff_12(i,j)<diff_11(i,j))&&(diff_12(i,j)<diff_11(i-1,j))....
+        &&(diff_12(i,j)<diff_11(i+1,j))&&(diff_12(i,j)<diff_11(i,j-1))....
+        &&(diff_12(i,j)<diff_11(i+1,j+1))&&(diff_12(i,j)<diff_11(i-1,j-1))....
+        &&(diff_12(i,j)<diff_11(i-1,j+1))&&(diff_12(i,j)<diff_11(i+1,j-1))&&(diff_12(i,j)<diff_11(i,j+1)))
+            z=z+1;
+    else 
+        continue;
+    end
+end
+% store key point location if it is minimum in its neighbourhood on same scale and also on scale above and below
+key(i,j)=diff_12(i,j);               
 
 
 end
@@ -193,6 +204,15 @@ end
   
  key1=key*255;
  figure,imshow(key1);   
- 
 
+%Calculating Magnitude and Orientation 
+for i=2:511
+    for j=2:511
+        %calculating magnitude and orientation of each point by looking at
+        %its neighbors
+        magsquared(i,j)=((diff_12(i+1,j)-diff_12(i-1,j))^2)+((diff_12(i,j+1)-diff_12(i,j-1))^2);
+        orientation(i,j)=atan2((diff_12(i,j+1)-diff_11(i,j-1)),(diff_12(i+1,j)-diff_11(i-1,j)));     
+    end
+end
+mag=sqrt(magsquared);   
     
