@@ -5,17 +5,21 @@ workspace % Show panel with all the variables.
 
 Image = imread(Image);
 bImage = im2bw(Image,0.01);
+% boundaries = bwboundaries(bImage)
+% edgeboundaries = bwboundaries(bImage)
 bImage=~bImage;
-bImage= imfill(bImage, 'holes');
+boundaries = bwboundaries(bImage)
+
+imshow(bImage)
 Template = imread(Template);
 bTemplate = im2bw(Template,0.8);%turn image to BW
-bTemplate= imfill(bTemplate, 'holes');%fill any potential background holes
 
 
-ImageCentroid=regionprops(bImage,'Centroid');
+% ImageCentroid=regionprops(bImage,'Centroid')
 TemplateCentroid=regionprops(bTemplate,'Centroid');
-NumberofObjects=size(ImageCentroid,1);
-boundaries = bwboundaries(bImage);
+
+% boundaries = bwboundaries(bImage)
+NumberofObjects=size(boundaries,1)
 
 mimage=masking(bImage,NumberofObjects);%get masked images
 
@@ -34,7 +38,7 @@ for i=1:NumberofObjects
         NumberofSquare=NumberofSquare+1;
         plot(boundaries{i}(:,2),boundaries{i}(:,1), 'g', 'LineWidth', 3);
         name=sprintf('%d',NumberofSquare);
-        text(ImageCentroid(i).Centroid(1),ImageCentroid(i).Centroid(2),name);
+%         text(ImageCentroid(i).Centroid(1),ImageCentroid(i).Centroid(2),name);
     end
 end
 name=sprintf('Number of Squares= %d', NumberofSquare);
